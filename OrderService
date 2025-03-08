@@ -1,0 +1,27 @@
+/* Using ReentrantLock for Fine-Grained Control
+Instead of synchronized, ReentrantLock allows better control with:
+Fair locking (ensures first-come-first-serve)
+Try-locking (avoids indefinite blocking)
+Interruptible locking (can be cancelled) */
+
+import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashMap;
+import java.util.Map;
+
+public class OrderService {
+    private final Map<Long, Order> orders = new HashMap<>();
+    private final ReentrantLock lock = new ReentrantLock();
+
+    public void processOrder(Long orderId) {
+        lock.lock();
+        try {
+            Order order = orders.get(orderId);
+            if (order != null) {
+                order.setStatus("PROCESSED");
+                System.out.println("Order processed: " + orderId);
+            }
+        } finally {
+            lock.unlock();
+        }
+    }
+}
