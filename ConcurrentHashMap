@@ -1,0 +1,13 @@
+import java.util.concurrent.ConcurrentHashMap;
+
+public class OrderService {
+    private final ConcurrentHashMap<Long, Order> orders = new ConcurrentHashMap<>();
+
+    public void processOrder(Long orderId) {
+        orders.computeIfPresent(orderId, (id, order) -> {
+            order.setStatus("PROCESSED");
+            System.out.println("Order processed: " + orderId);
+            return order;
+        });
+    }
+}
